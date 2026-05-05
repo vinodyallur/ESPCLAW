@@ -1,0 +1,4 @@
+board: esp32c3_DevKitM
+chip: esp32c3
+description: "ESP32-C3-DevKitM-1 Development Board (RISC-V, no PSRAM)"
+manufacturer: "ESPRESSIF"

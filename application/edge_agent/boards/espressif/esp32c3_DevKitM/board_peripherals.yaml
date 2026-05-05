@@ -1,0 +1,24 @@
+version: 1.0.0
+# Peripherals Configuration for ESP32-C3-DevKitM-1
+#
+# GPIO 8 → WS2812 onboard RGB LED via RMT.
+# ESP32-C3 does NOT support DMA for RMT (with_dma must be false).
+
+peripherals:
+  - name: rmt_tx
+    type: rmt
+    role: tx
+    config:
+      gpio_num: 8
+      clk_src: RMT_CLK_SRC_DEFAULT
+      resolution_hz: 10000000
+      mem_block_symbols: 48
+      trans_queue_depth: 4
+      intr_priority: 1
+      flags:
+        invert_out: false
+        with_dma: false             # ESP32-C3 RMT has no DMA support
+        io_loop_back: false
+        io_od_mode: false
+        allow_pd: false
+        init_level: false

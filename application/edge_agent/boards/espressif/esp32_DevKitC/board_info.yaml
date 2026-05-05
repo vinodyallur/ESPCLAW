@@ -1,0 +1,4 @@
+board: esp32_DevKitC
+chip: esp32
+description: "ESP32-DevKitC Development Board (classic ESP32, no PSRAM)"
+manufacturer: "ESPRESSIF"

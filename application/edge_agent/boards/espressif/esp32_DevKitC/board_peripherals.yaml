@@ -1,0 +1,7 @@
+version: 1.0.0
+# Peripherals Configuration for ESP32-DevKitC
+# Classic ESP32 DevKitC has no onboard RMT-driven LED strip.
+# Peripherals list is intentionally empty; add entries as needed
+# when external peripherals (LCD, I2C devices, etc.) are connected.
+
+peripherals: []

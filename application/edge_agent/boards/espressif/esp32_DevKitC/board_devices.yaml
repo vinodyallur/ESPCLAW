@@ -1,0 +1,7 @@
+version: 1.0.0
+# Devices Configuration for ESP32-DevKitC
+# Classic ESP32 DevKitC has a blue LED on GPIO2 (active high).
+# No onboard WS2812 RGB LED strip — the led_strip device is omitted.
+# If you have an external WS2812 strip, add it and point rmt_tx to the correct GPIO.
+
+devices: []

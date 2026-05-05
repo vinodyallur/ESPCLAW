@@ -1,0 +1,18 @@
+# Partition table for 4MB flash boards (ESP32-DevKitC, ESP32-C3-DevKitM)
+# Total usable flash: ~4MB (0x400000)
+# Layout (all sizes in bytes):
+#   nvs        : 24K   (0x6000)
+#   otadata    :  8K   (0x2000)
+#   phy_init   :  4K   (0x1000)
+#   ota_0 (app): ~1.5M (0x180000)  – single OTA slot, no ota_1
+#   storage    : ~256K (0x40000)   – FAT partition for config / memory files
+#
+# NOTE: The "emote" spiffs partition from the 8MB/16MB layouts is omitted
+# because 4MB is too small to include the ~3MB emoji animation assets.
+# Emote/animation features will be unavailable on these boards.
+# Name,    Type, SubType, Offset,   Size
+nvs,       data, nvs,     0x9000,   0x6000
+otadata,   data, ota,     0xF000,   0x2000
+phy_init,  data, phy,     0x11000,  0x1000
+ota_0,     app,  ota_0,   0x12000,  0x180000
+storage,   data, fat,     0x192000, 0x40000
