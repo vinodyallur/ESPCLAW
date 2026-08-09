@@ -553,7 +553,7 @@ static esp_err_t cap_im_wechat_http_request(const char *url,
                                             cap_im_wechat_http_resp_t *response)
 {
     esp_http_client_config_t config = {0};
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     esp_err_t err;
     int status;
 
@@ -572,51 +572,51 @@ static esp_err_t cap_im_wechat_http_request(const char *url,
     config.buffer_size = 1024;
     config.buffer_size_tx = 2048;
 
-    client = esp_http_client_init(&config);
-    if (!client) {
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
         return ESP_ERR_NO_MEM;
     }
 
     if (content_type && content_type[0]) {
-        esp_http_client_set_header(client, "Content-Type", content_type);
+        esp_http_client_set_header(c1, "Content-Type", content_type);
     }
     if (use_common_headers) {
         char x_wechat_uin[64];
 
         if (s_wechat.app_id[0]) {
-            esp_http_client_set_header(client, "iLink-App-Id", s_wechat.app_id);
+            esp_http_client_set_header(c1, "iLink-App-Id", s_wechat.app_id);
         }
         if (s_wechat.client_version[0]) {
-            esp_http_client_set_header(client, "iLink-App-ClientVersion", s_wechat.client_version);
+            esp_http_client_set_header(c1, "iLink-App-ClientVersion", s_wechat.client_version);
         }
         if (s_wechat.route_tag[0]) {
-            esp_http_client_set_header(client, "SKRouteTag", s_wechat.route_tag);
+            esp_http_client_set_header(c1, "SKRouteTag", s_wechat.route_tag);
         }
         err = cap_im_wechat_build_x_wechat_uin(x_wechat_uin, sizeof(x_wechat_uin));
         if (err != ESP_OK) {
             goto cleanup;
         }
-        esp_http_client_set_header(client, "X-WECHAT-UIN", x_wechat_uin);
+        esp_http_client_set_header(c1, "X-WECHAT-UIN", x_wechat_uin);
     }
     if (use_auth_headers) {
-        esp_http_client_set_header(client, "AuthorizationType", "ilink_bot_token");
+        esp_http_client_set_header(c1, "AuthorizationType", "ilink_bot_token");
         if (s_wechat.token[0]) {
             char auth_header[CAP_IM_WECHAT_TOKEN_SIZE + 8];
 
             snprintf(auth_header, sizeof(auth_header), "Bearer %s", s_wechat.token);
-            esp_http_client_set_header(client, "Authorization", auth_header);
+            esp_http_client_set_header(c1, "Authorization", auth_header);
         }
     }
     if (body && body_len > 0) {
-        esp_http_client_set_post_field(client, body, (int)body_len);
+        esp_http_client_set_post_field(c1, body, (int)body_len);
     }
 
-    err = esp_http_client_perform(client);
+    err = esp_http_client_perform(c1);
     if (err != ESP_OK) {
         goto cleanup;
     }
 
-    status = esp_http_client_get_status_code(client);
+    status = esp_http_client_get_status_code(c1);
     err = ESP_OK;
     if (status < 200 || status >= 300) {
         ESP_LOGW(TAG, "WeChat HTTP %s failed: status=%d body=%s", url, status,
@@ -625,8 +625,8 @@ static esp_err_t cap_im_wechat_http_request(const char *url,
     }
 
 cleanup:
-    if (client) {
-        esp_http_client_cleanup(client);
+    if (c1) {
+        esp_http_client_cleanup(c1);
     }
     return err;
 }

@@ -357,7 +357,7 @@ esp_err_t cap_im_attachment_download_url_to_file(const char *log_tag,
                                                  size_t *out_bytes)
 {
     esp_http_client_config_t config = {0};
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     cap_im_attachment_download_t dl = {0};
     FILE *file = NULL;
     esp_err_t err;
@@ -389,16 +389,16 @@ esp_err_t cap_im_attachment_download_url_to_file(const char *log_tag,
     config.buffer_size_tx = 1024;
     config.crt_bundle_attach = esp_crt_bundle_attach;
 
-    client = esp_http_client_init(&config);
-    if (!client) {
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
         fclose(file);
         remove(dest_path);
         return ESP_FAIL;
     }
 
-    err = esp_http_client_perform(client);
-    status = esp_http_client_get_status_code(client);
-    esp_http_client_cleanup(client);
+    err = esp_http_client_perform(c1);
+    status = esp_http_client_get_status_code(c1);
+    esp_http_client_cleanup(c1);
     fclose(file);
 
     if (err != ESP_OK || status < 200 || status >= 300 || dl.limit_hit || dl.bytes_written == 0) {

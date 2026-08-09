@@ -1,6 +1,6 @@
 import { createMemo, createSignal, For, Show, type Component } from 'solid-js';
 import { t, tf } from '../i18n';
-import type { AppConfig, CapabilityItem } from '../api/client';
+import type { AppConfig, CapabilityItem } from '../api/c1';
 import { appCapabilities } from '../state/config';
 import { createConfigTab } from '../state/configTab';
 import { TabShell } from '../components/layout/TabShell';

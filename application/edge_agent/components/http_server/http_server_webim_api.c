@@ -55,7 +55,7 @@ static void webim_ws_fd_add(int fd)
     }
     if (s_ws_count < WEBIM_WS_MAX_CLIENTS) {
         s_ws_fds[s_ws_count++] = fd;
-        ESP_LOGD(TAG, "WS client fd=%d (n=%u)", fd, (unsigned)s_ws_count);
+        ESP_LOGD(TAG, "WS c1 fd=%d (n=%u)", fd, (unsigned)s_ws_count);
     }
     xSemaphoreGive(s_ws_mx);
 }
@@ -72,7 +72,7 @@ static void webim_ws_fd_remove(int fd)
         if (s_ws_fds[i] == fd) {
             s_ws_fds[i] = s_ws_fds[s_ws_count - 1];
             s_ws_count--;
-            ESP_LOGD(TAG, "WS client removed fd=%d (n=%u)", fd, (unsigned)s_ws_count);
+            ESP_LOGD(TAG, "WS c1 removed fd=%d (n=%u)", fd, (unsigned)s_ws_count);
             break;
         }
     }
@@ -104,7 +104,7 @@ static void webim_ws_broadcast_json(const char *json)
         return;
     }
 
-    ESP_LOGI(TAG, "WS broadcast: %u client(s) len=%u", (unsigned)local_count, (unsigned)pkt.len);
+    ESP_LOGI(TAG, "WS broadcast: %u c1(s) len=%u", (unsigned)local_count, (unsigned)pkt.len);
 
     for (size_t i = 0; i < local_count; i++) {
         esp_err_t err = httpd_ws_send_data(s_httpd, local_fds[i], &pkt);
@@ -309,7 +309,7 @@ static esp_err_t webim_ws_handler(httpd_req_t *req)
     /* First invocation is the HTTP GET upgrade handshake; no WS frame yet. */
     if (req->method == HTTP_GET) {
         webim_ws_fd_add(fd);
-        ESP_LOGI(TAG, "WS client connected fd=%d", fd);
+        ESP_LOGI(TAG, "WS c1 connected fd=%d", fd);
         return ESP_OK;
     }
 
