@@ -12,13 +12,13 @@ import {
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { generate } from 'lean-qr';
-import type { AppConfig, WechatLoginStatus } from '../api/client';
+import type { AppConfig, WechatLoginStatus } from '../api/c1';
 import {
   cancelWechatLogin,
   pollWechatLoginStatus,
   saveConfigPatch,
   startWechatLogin,
-} from '../api/client';
+} from '../api/c1';
 import { LanguageSwitcher } from '../components/layout/LanguageSwitcher';
 import { Banner } from '../components/ui/Banner';
 import { Button } from '../components/ui/Button';

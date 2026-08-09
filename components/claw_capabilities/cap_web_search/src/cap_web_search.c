@@ -244,20 +244,20 @@ static esp_err_t cap_web_search_brave_direct(const char *url,
         .buffer_size = 4096,
         .crt_bundle_attach = esp_crt_bundle_attach,
     };
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     esp_err_t err;
     int status;
 
-    client = esp_http_client_init(&config);
-    if (!client) {
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
         return ESP_FAIL;
     }
 
-    esp_http_client_set_header(client, "Accept", "application/json");
-    esp_http_client_set_header(client, "X-Subscription-Token", s_search.brave_key);
-    err = esp_http_client_perform(client);
-    status = esp_http_client_get_status_code(client);
-    esp_http_client_cleanup(client);
+    esp_http_client_set_header(c1, "Accept", "application/json");
+    esp_http_client_set_header(c1, "X-Subscription-Token", s_search.brave_key);
+    err = esp_http_client_perform(c1);
+    status = esp_http_client_get_status_code(c1);
+    esp_http_client_cleanup(c1);
     if (err != ESP_OK) {
         return err;
     }
@@ -281,7 +281,7 @@ static esp_err_t cap_web_search_tavily_direct(const char *query,
         .buffer_size = 4096,
         .crt_bundle_attach = esp_crt_bundle_attach,
     };
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     char auth[192];
     char *payload = NULL;
     esp_err_t err;
@@ -292,21 +292,21 @@ static esp_err_t cap_web_search_tavily_direct(const char *query,
         return ESP_ERR_NO_MEM;
     }
 
-    client = esp_http_client_init(&config);
-    if (!client) {
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
         free(payload);
         return ESP_FAIL;
     }
 
     snprintf(auth, sizeof(auth), "Bearer %s", s_search.tavily_key);
-    esp_http_client_set_method(client, HTTP_METHOD_POST);
-    esp_http_client_set_header(client, "Accept", "application/json");
-    esp_http_client_set_header(client, "Content-Type", "application/json");
-    esp_http_client_set_header(client, "Authorization", auth);
-    esp_http_client_set_post_field(client, payload, strlen(payload));
-    err = esp_http_client_perform(client);
-    status = esp_http_client_get_status_code(client);
-    esp_http_client_cleanup(client);
+    esp_http_client_set_method(c1, HTTP_METHOD_POST);
+    esp_http_client_set_header(c1, "Accept", "application/json");
+    esp_http_client_set_header(c1, "Content-Type", "application/json");
+    esp_http_client_set_header(c1, "Authorization", auth);
+    esp_http_client_set_post_field(c1, payload, strlen(payload));
+    err = esp_http_client_perform(c1);
+    status = esp_http_client_get_status_code(c1);
+    esp_http_client_cleanup(c1);
     free(payload);
     if (err != ESP_OK) {
         return err;

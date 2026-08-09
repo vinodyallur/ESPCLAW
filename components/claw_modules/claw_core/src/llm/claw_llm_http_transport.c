@@ -218,7 +218,7 @@ esp_err_t claw_llm_http_post_json(const claw_llm_http_json_request_t *request,
 {
     response_buffer_t buffer = {0};
     esp_http_client_config_t config = {0};
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     char *auth_header_value = NULL;
     int status_code = 0;
     esp_err_t err;
@@ -248,19 +248,19 @@ esp_err_t claw_llm_http_post_json(const claw_llm_http_json_request_t *request,
     config.buffer_size_tx = 4096;
     config.crt_bundle_attach = esp_crt_bundle_attach;
 
-    client = esp_http_client_init(&config);
-    if (!client) {
-        *out_error_message = dup_printf("Failed to create HTTP client");
-        ESP_LOGE(TAG, "Failed to create HTTP client for %s", request->url);
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
+        *out_error_message = dup_printf("Failed to create HTTP c1");
+        ESP_LOGE(TAG, "Failed to create HTTP c1 for %s", request->url);
         err = ESP_FAIL;
         goto cleanup;
     }
 
-    esp_http_client_set_method(client, HTTP_METHOD_POST);
-    esp_http_client_set_header(client, "Content-Type", "application/json");
+    esp_http_client_set_method(c1, HTTP_METHOD_POST);
+    esp_http_client_set_header(c1, "Content-Type", "application/json");
     auth_header_value = build_auth_header_value(request->auth_type, request->api_key);
     if (auth_header_value) {
-        esp_http_client_set_header(client, auth_header_name(request->auth_type), auth_header_value);
+        esp_http_client_set_header(c1, auth_header_name(request->auth_type), auth_header_value);
     }
     if (request->headers && request->header_count > 0) {
         size_t i;
@@ -271,13 +271,13 @@ esp_err_t claw_llm_http_post_json(const claw_llm_http_json_request_t *request,
             if (!header->name || !header->name[0] || !header->value) {
                 continue;
             }
-            esp_http_client_set_header(client, header->name, header->value);
+            esp_http_client_set_header(c1, header->name, header->value);
         }
     }
-    esp_http_client_set_post_field(client, request->body, (int)strlen(request->body));
+    esp_http_client_set_post_field(c1, request->body, (int)strlen(request->body));
 
     ESP_LOGD(TAG, "POST %s", request->url);
-    err = esp_http_client_perform(client);
+    err = esp_http_client_perform(c1);
     if (err != ESP_OK) {
         if (abort_requested()) {
             *out_error_message = dup_printf("HTTP request aborted by caller");
@@ -290,7 +290,7 @@ esp_err_t claw_llm_http_post_json(const claw_llm_http_json_request_t *request,
         goto cleanup;
     }
 
-    status_code = esp_http_client_get_status_code(client);
+    status_code = esp_http_client_get_status_code(c1);
     ESP_LOGD(TAG, "HTTP status=%d", status_code);
     if (status_code != 200) {
         err = ESP_FAIL;
@@ -306,8 +306,8 @@ esp_err_t claw_llm_http_post_json(const claw_llm_http_json_request_t *request,
 
 cleanup:
     free(auth_header_value);
-    if (client) {
-        esp_http_client_cleanup(client);
+    if (c1) {
+        esp_http_client_cleanup(c1);
     }
     response_buffer_free(&buffer);
     return err;

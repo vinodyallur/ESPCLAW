@@ -11,8 +11,8 @@ import {
 import { type SetStoreFunction } from 'solid-js/store';
 import { generate } from 'lean-qr';
 import { t } from '../i18n';
-import type { AppConfig, WechatLoginStatus } from '../api/client';
-import { cancelWechatLogin, pollWechatLoginStatus, startWechatLogin } from '../api/client';
+import type { AppConfig, WechatLoginStatus } from '../api/c1';
+import { cancelWechatLogin, pollWechatLoginStatus, startWechatLogin } from '../api/c1';
 import { createConfigTab } from '../state/configTab';
 import { TabShell } from '../components/layout/TabShell';
 import { PageHeader } from '../components/ui/PageHeader';

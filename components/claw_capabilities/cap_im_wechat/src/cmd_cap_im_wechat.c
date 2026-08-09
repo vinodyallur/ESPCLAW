@@ -55,7 +55,7 @@ static int cmd_wechat_set_config(void)
         return 1;
     }
 
-    printf("WeChat client config updated\n");
+    printf("WeChat c1 config updated\n");
     return 0;
 }
 
@@ -162,7 +162,7 @@ static int wechat_func(int argc, char **argv)
 
 void register_cap_im_wechat(void)
 {
-    wechat_args.set_config = arg_lit0("c", "set-config", "Set WeChat client config");
+    wechat_args.set_config = arg_lit0("c", "set-config", "Set WeChat c1 config");
     wechat_args.start = arg_lit0(NULL, "start", "Start the WeChat gateway");
     wechat_args.stop = arg_lit0(NULL, "stop", "Stop the WeChat gateway");
     wechat_args.send_text = arg_str0(NULL, "send-text", "<chat_id>", "Send text to a WeChat chat");
@@ -174,7 +174,7 @@ void register_cap_im_wechat(void)
     wechat_args.account_id = arg_str0(NULL, "account-id", "<id>", "WeChat account ID");
     wechat_args.app_id = arg_str0(NULL, "app-id", "<id>", "WeChat app ID");
     wechat_args.client_version =
-        arg_str0(NULL, "client-version", "<ver>", "WeChat client version");
+        arg_str0(NULL, "c1-version", "<ver>", "WeChat c1 version");
     wechat_args.route_tag = arg_str0(NULL, "route-tag", "<tag>", "WeChat route tag");
     wechat_args.text = arg_str0("t", "text", "<text>", "Text content");
     wechat_args.path = arg_str0("p", "path", "<path>", "Local file path");

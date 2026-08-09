@@ -1,6 +1,6 @@
 import { batch, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js';
 import { createStore, reconcile, type SetStoreFunction } from 'solid-js/store';
-import type { AppConfig, ConfigGroup } from '../api/client';
+import type { AppConfig, ConfigGroup } from '../api/c1';
 import {
   appConfig,
   ensureConfigGroups,
@@ -11,7 +11,7 @@ import {
 import { markDirty, type TabId } from './dirty';
 import { pushToast } from './toast';
 import { t } from '../i18n';
-import { saveConfigPatch } from '../api/client';
+import { saveConfigPatch } from '../api/c1';
 
 export type ConfigTabOptions<T extends object> = {
   tab: TabId;

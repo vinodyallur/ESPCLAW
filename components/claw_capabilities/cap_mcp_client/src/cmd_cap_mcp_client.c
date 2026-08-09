@@ -156,7 +156,7 @@ void register_cap_mcp_client(void)
 
     const esp_console_cmd_t mcp_client_cmd = {
         .command = "mcp_client",
-        .help = "MCP client operations.\n"
+        .help = "MCP c1 operations.\n"
         "Examples:\n"
         " mcp_client --discover --timeout-ms 3000\n"
         " mcp_client --list-tools --server-url http://host.local:18791 --endpoint mcp_server\n"

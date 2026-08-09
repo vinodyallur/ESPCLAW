@@ -376,7 +376,7 @@ static esp_err_t cap_im_qq_get_access_token(void)
     char *json_str = NULL;
     cap_im_qq_http_resp_t resp = {0};
     esp_http_client_config_t config = {0};
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     esp_err_t err;
     int status;
     int64_t now = esp_timer_get_time() / 1000000LL;
@@ -416,20 +416,20 @@ static esp_err_t cap_im_qq_get_access_token(void)
     config.buffer_size_tx = 1024;
     config.crt_bundle_attach = esp_crt_bundle_attach;
 
-    client = esp_http_client_init(&config);
-    if (!client) {
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
         free(json_str);
         free(resp.buf);
         return ESP_FAIL;
     }
 
-    esp_http_client_set_method(client, HTTP_METHOD_POST);
-    esp_http_client_set_header(client, "Content-Type", "application/json");
-    esp_http_client_set_post_field(client, json_str, strlen(json_str));
+    esp_http_client_set_method(c1, HTTP_METHOD_POST);
+    esp_http_client_set_header(c1, "Content-Type", "application/json");
+    esp_http_client_set_post_field(c1, json_str, strlen(json_str));
 
-    err = esp_http_client_perform(client);
-    status = esp_http_client_get_status_code(client);
-    esp_http_client_cleanup(client);
+    err = esp_http_client_perform(c1);
+    status = esp_http_client_get_status_code(c1);
+    esp_http_client_cleanup(c1);
     free(json_str);
 
     if (err != ESP_OK || status != 200) {
@@ -477,7 +477,7 @@ static esp_err_t cap_im_qq_fetch_gateway_url(void)
 retry:
     cap_im_qq_http_resp_t resp = {0};
     esp_http_client_config_t config = {0};
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     char *auth = NULL;
     esp_err_t err;
     int status;
@@ -500,23 +500,23 @@ retry:
     config.buffer_size = 1024;
     config.crt_bundle_attach = esp_crt_bundle_attach;
 
-    client = esp_http_client_init(&config);
-    if (!client) {
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
         free(resp.buf);
         return ESP_FAIL;
     }
 
     auth = cap_im_qq_make_auth_header();
     if (!auth) {
-        esp_http_client_cleanup(client);
+        esp_http_client_cleanup(c1);
         free(resp.buf);
         return ESP_ERR_NO_MEM;
     }
 
-    esp_http_client_set_header(client, "Authorization", auth);
-    err = esp_http_client_perform(client);
-    status = esp_http_client_get_status_code(client);
-    esp_http_client_cleanup(client);
+    esp_http_client_set_header(c1, "Authorization", auth);
+    err = esp_http_client_perform(c1);
+    status = esp_http_client_get_status_code(c1);
+    esp_http_client_cleanup(c1);
     free(auth);
 
     if (err != ESP_OK || status != 200) {
@@ -1095,7 +1095,7 @@ static esp_err_t cap_im_qq_api_post(const char *path,
 retry:
     cap_im_qq_http_resp_t resp = {0};
     esp_http_client_config_t config = {0};
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     char *url = NULL;
     char *auth = NULL;
     esp_err_t err;
@@ -1132,24 +1132,24 @@ retry:
     config.buffer_size_tx = 2048;
     config.crt_bundle_attach = esp_crt_bundle_attach;
 
-    client = esp_http_client_init(&config);
-    if (!client) {
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
         free(url);
         free(resp.buf);
         free(auth);
         return ESP_FAIL;
     }
 
-    esp_http_client_set_method(client, HTTP_METHOD_POST);
-    esp_http_client_set_header(client, "Authorization", auth);
-    esp_http_client_set_header(client, "Content-Type", "application/json");
+    esp_http_client_set_method(c1, HTTP_METHOD_POST);
+    esp_http_client_set_header(c1, "Authorization", auth);
+    esp_http_client_set_header(c1, "Content-Type", "application/json");
     if (body_json) {
-        esp_http_client_set_post_field(client, body_json, strlen(body_json));
+        esp_http_client_set_post_field(c1, body_json, strlen(body_json));
     }
 
-    err = esp_http_client_perform(client);
-    status = esp_http_client_get_status_code(client);
-    esp_http_client_cleanup(client);
+    err = esp_http_client_perform(c1);
+    status = esp_http_client_get_status_code(c1);
+    esp_http_client_cleanup(c1);
     free(url);
     free(auth);
 

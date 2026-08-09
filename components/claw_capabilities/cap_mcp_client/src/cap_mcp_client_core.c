@@ -84,21 +84,21 @@ static esp_err_t cap_mcp_http_post(const char *url,
         .buffer_size = 2048,
         .crt_bundle_attach = esp_crt_bundle_attach,
     };
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     esp_err_t err;
     int status;
 
-    client = esp_http_client_init(&config);
-    if (!client) {
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
         return ESP_ERR_NO_MEM;
     }
 
-    esp_http_client_set_header(client, "Content-Type", "application/json");
-    esp_http_client_set_header(client, "Accept", "application/json");
-    esp_http_client_set_post_field(client, body, (int)strlen(body));
-    err = esp_http_client_perform(client);
-    status = esp_http_client_get_status_code(client);
-    esp_http_client_cleanup(client);
+    esp_http_client_set_header(c1, "Content-Type", "application/json");
+    esp_http_client_set_header(c1, "Accept", "application/json");
+    esp_http_client_set_post_field(c1, body, (int)strlen(body));
+    err = esp_http_client_perform(c1);
+    status = esp_http_client_get_status_code(c1);
+    esp_http_client_cleanup(c1);
 
     if (err != ESP_OK) {
         return err;

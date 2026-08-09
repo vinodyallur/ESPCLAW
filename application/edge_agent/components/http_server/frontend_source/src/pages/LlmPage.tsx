@@ -1,6 +1,6 @@
 import { createEffect, createMemo, createSignal, Show, type Component } from 'solid-js';
 import { t } from '../i18n';
-import type { AppConfig } from '../api/client';
+import type { AppConfig } from '../api/c1';
 import { createConfigTab } from '../state/configTab';
 import { TabShell } from '../components/layout/TabShell';
 import { PageHeader } from '../components/ui/PageHeader';

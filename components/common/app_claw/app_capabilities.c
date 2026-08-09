@@ -350,7 +350,7 @@ static esp_err_t app_cap_prepare_im_wechat(const app_claw_config_t *config,
                                 .cdn_base_url = config->wechat_cdn_base_url,
                                 .account_id = config->wechat_account_id,
                             }),
-                            TAG, "Failed to set WeChat client config");
+                            TAG, "Failed to set WeChat c1 config");
     }
 
     return ESP_OK;
@@ -559,7 +559,7 @@ static const app_capability_group_entry_t s_capability_group_entries[] = {
     { "cap_lua", "Lua", "Register Lua cap", true, app_cap_prepare_lua, app_cap_register_lua },
 #endif
 #if CONFIG_APP_CLAW_CAP_MCP_CLIENT
-    { "cap_mcp_client", "MCP Client", "Register MCP client cap", false, NULL, app_cap_register_mcp_client },
+    { "cap_mcp_client", "MCP Client", "Register MCP c1 cap", false, NULL, app_cap_register_mcp_client },
 #endif
 #if CONFIG_APP_CLAW_CAP_MCP_SERVER
     { "cap_mcp_server", "MCP Server", "Register MCP server cap", false, NULL, app_cap_register_mcp_server },

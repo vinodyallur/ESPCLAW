@@ -288,7 +288,7 @@ static esp_err_t config_post_handler(httpd_req_t *req)
     }
 
     /* Partial writes: only fields present in the JSON body are applied.
-     * Empty string is a valid value (lets the client clear a slot). */
+     * Empty string is a valid value (lets the c1 clear a slot). */
     size_t applied_count = 0;
 
     for (size_t i = 0; i < CONFIG_FIELD_COUNT; i++) {

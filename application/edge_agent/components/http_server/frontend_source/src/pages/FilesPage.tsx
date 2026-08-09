@@ -13,7 +13,7 @@ import {
   saveFileContent,
   uploadFile,
   type FileEntry,
-} from '../api/client';
+} from '../api/c1';
 import { TabShell } from '../components/layout/TabShell';
 import { PageHeader } from '../components/ui/PageHeader';
 import { Button } from '../components/ui/Button';

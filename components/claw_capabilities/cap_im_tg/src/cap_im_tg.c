@@ -165,7 +165,7 @@ static esp_err_t cap_im_tg_api_call(const char *method,
 {
     cap_im_tg_http_resp_t resp = {0};
     esp_http_client_config_t config = {0};
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     char *url = NULL;
     int needed;
     esp_err_t err;
@@ -202,22 +202,22 @@ static esp_err_t cap_im_tg_api_call(const char *method,
     config.buffer_size_tx = 2048;
     config.crt_bundle_attach = esp_crt_bundle_attach;
 
-    client = esp_http_client_init(&config);
-    if (!client) {
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
         free(url);
         free(resp.buf);
         return ESP_FAIL;
     }
 
     if (body_json) {
-        esp_http_client_set_method(client, HTTP_METHOD_POST);
-        esp_http_client_set_header(client, "Content-Type", "application/json");
-        esp_http_client_set_post_field(client, body_json, strlen(body_json));
+        esp_http_client_set_method(c1, HTTP_METHOD_POST);
+        esp_http_client_set_header(c1, "Content-Type", "application/json");
+        esp_http_client_set_post_field(c1, body_json, strlen(body_json));
     }
 
-    err = esp_http_client_perform(client);
-    status = esp_http_client_get_status_code(client);
-    esp_http_client_cleanup(client);
+    err = esp_http_client_perform(c1);
+    status = esp_http_client_get_status_code(c1);
+    esp_http_client_cleanup(c1);
     free(url);
 
     if (err != ESP_OK) {
@@ -833,18 +833,18 @@ static const char *cap_im_tg_guess_mime_type(const char *path, bool is_image)
     return is_image ? "image/jpeg" : "application/octet-stream";
 }
 
-static esp_err_t cap_im_tg_http_client_write_all(esp_http_client_handle_t client,
+static esp_err_t cap_im_tg_http_client_write_all(esp_http_client_handle_t c1,
                                                  const char *data,
                                                  size_t len)
 {
     size_t total = 0;
 
-    if (!client || (!data && len > 0)) {
+    if (!c1 || (!data && len > 0)) {
         return ESP_ERR_INVALID_ARG;
     }
 
     while (total < len) {
-        int written = esp_http_client_write(client, data + total, (int)(len - total));
+        int written = esp_http_client_write(c1, data + total, (int)(len - total));
 
         if (written <= 0) {
             return ESP_FAIL;
@@ -856,11 +856,11 @@ static esp_err_t cap_im_tg_http_client_write_all(esp_http_client_handle_t client
     return ESP_OK;
 }
 
-static esp_err_t cap_im_tg_stream_file_to_http_client(esp_http_client_handle_t client, FILE *file)
+static esp_err_t cap_im_tg_stream_file_to_http_client(esp_http_client_handle_t c1, FILE *file)
 {
     char buf[1024];
 
-    if (!client || !file) {
+    if (!c1 || !file) {
         return ESP_ERR_INVALID_ARG;
     }
 
@@ -868,7 +868,7 @@ static esp_err_t cap_im_tg_stream_file_to_http_client(esp_http_client_handle_t c
         size_t nread = fread(buf, 1, sizeof(buf), file);
 
         if (nread > 0) {
-            esp_err_t err = cap_im_tg_http_client_write_all(client, buf, nread);
+            esp_err_t err = cap_im_tg_http_client_write_all(c1, buf, nread);
             if (err != ESP_OK) {
                 return err;
             }
@@ -892,7 +892,7 @@ static esp_err_t cap_im_tg_send_multipart_file(const char *method,
     struct stat st;
     FILE *file = NULL;
     esp_http_client_config_t config = {0};
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     cap_im_tg_http_resp_t resp = {0};
     char *url = NULL;
     const char *mime = NULL;
@@ -1009,8 +1009,8 @@ static esp_err_t cap_im_tg_send_multipart_file(const char *method,
     config.buffer_size_tx = 2048;
     config.crt_bundle_attach = esp_crt_bundle_attach;
 
-    client = esp_http_client_init(&config);
-    if (!client) {
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
         fclose(file);
         free(url);
         free(resp.buf);
@@ -1020,33 +1020,33 @@ static esp_err_t cap_im_tg_send_multipart_file(const char *method,
     snprintf(content_type,
              sizeof(content_type),
              "multipart/form-data; boundary=" CAP_IM_TG_MULTIPART_BOUNDARY);
-    esp_http_client_set_header(client, "Content-Type", content_type);
+    esp_http_client_set_header(c1, "Content-Type", content_type);
 
-    err = esp_http_client_open(client, (int)content_length);
+    err = esp_http_client_open(c1, (int)content_length);
     if (err == ESP_OK) {
-        err = cap_im_tg_http_client_write_all(client, part_chat, (size_t)part_chat_len);
+        err = cap_im_tg_http_client_write_all(c1, part_chat, (size_t)part_chat_len);
     }
     if (err == ESP_OK && part_caption_len > 0) {
-        err = cap_im_tg_http_client_write_all(client, part_caption, (size_t)part_caption_len);
+        err = cap_im_tg_http_client_write_all(c1, part_caption, (size_t)part_caption_len);
     }
     if (err == ESP_OK) {
-        err = cap_im_tg_http_client_write_all(client, part_file, (size_t)part_file_len);
+        err = cap_im_tg_http_client_write_all(c1, part_file, (size_t)part_file_len);
     }
     if (err == ESP_OK) {
-        err = cap_im_tg_stream_file_to_http_client(client, file);
+        err = cap_im_tg_stream_file_to_http_client(c1, file);
     }
     if (err == ESP_OK) {
-        err = cap_im_tg_http_client_write_all(client, closing, (size_t)closing_len);
+        err = cap_im_tg_http_client_write_all(c1, closing, (size_t)closing_len);
     }
     if (err == ESP_OK) {
-        if (esp_http_client_fetch_headers(client) < 0) {
+        if (esp_http_client_fetch_headers(c1) < 0) {
             err = ESP_FAIL;
         }
     }
 
-    status = esp_http_client_get_status_code(client);
-    esp_http_client_close(client);
-    esp_http_client_cleanup(client);
+    status = esp_http_client_get_status_code(c1);
+    esp_http_client_close(c1);
+    esp_http_client_cleanup(c1);
     fclose(file);
     free(url);
 

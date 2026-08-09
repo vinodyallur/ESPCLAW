@@ -11,7 +11,7 @@ import {
   type ConfigGroup,
   type LuaModuleItem,
   type StatusInfo,
-} from '../api/client';
+} from '../api/c1';
 
 /* ── Runtime status ─────────────────────────────────────────────────── */
 

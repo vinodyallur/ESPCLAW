@@ -1,7 +1,7 @@
 import { createEffect, createSignal, lazy, onCleanup, onMount, Show, Suspense } from 'solid-js';
 import type { Component } from 'solid-js';
 
-import { fetchStatus, restartDevice } from './api/client';
+import { fetchStatus, restartDevice } from './api/c1';
 import { Layout } from './components/layout/Layout';
 import { LEAF_IDS } from './components/layout/Sidebar';
 import {

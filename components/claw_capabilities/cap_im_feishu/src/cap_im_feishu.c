@@ -235,7 +235,7 @@ static esp_err_t cap_im_feishu_http_json(const char *url,
 {
     cap_im_feishu_resp_t resp = {0};
     esp_http_client_config_t config = {0};
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     esp_err_t err;
 
     if (out_response) {
@@ -261,28 +261,28 @@ static esp_err_t cap_im_feishu_http_json(const char *url,
     config.buffer_size_tx = 2048;
     config.crt_bundle_attach = esp_crt_bundle_attach;
 
-    client = esp_http_client_init(&config);
-    if (!client) {
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
         cap_im_feishu_resp_free(&resp);
         return ESP_FAIL;
     }
 
     if (strcmp(method, "POST") == 0) {
-        esp_http_client_set_method(client, HTTP_METHOD_POST);
+        esp_http_client_set_method(c1, HTTP_METHOD_POST);
     } else {
-        esp_http_client_set_method(client, HTTP_METHOD_GET);
+        esp_http_client_set_method(c1, HTTP_METHOD_GET);
     }
-    esp_http_client_set_header(client, "Content-Type", "application/json; charset=utf-8");
+    esp_http_client_set_header(c1, "Content-Type", "application/json; charset=utf-8");
     if (authorization && authorization[0]) {
-        esp_http_client_set_header(client, "Authorization", authorization);
+        esp_http_client_set_header(c1, "Authorization", authorization);
     }
     if (body) {
-        esp_http_client_set_post_field(client, body, (int)strlen(body));
+        esp_http_client_set_post_field(c1, body, (int)strlen(body));
     }
 
-    err = esp_http_client_perform(client);
-    *out_status = esp_http_client_get_status_code(client);
-    esp_http_client_cleanup(client);
+    err = esp_http_client_perform(c1);
+    *out_status = esp_http_client_get_status_code(c1);
+    esp_http_client_cleanup(c1);
     if (err != ESP_OK) {
         cap_im_feishu_resp_free(&resp);
         return err;
@@ -515,18 +515,18 @@ static const char *cap_im_feishu_guess_upload_mime(const char *path, bool is_ima
     return is_image ? "image/jpeg" : "application/octet-stream";
 }
 
-static esp_err_t cap_im_feishu_http_client_write_all(esp_http_client_handle_t client,
+static esp_err_t cap_im_feishu_http_client_write_all(esp_http_client_handle_t c1,
                                                      const char *buf,
                                                      size_t len)
 {
     size_t offset = 0;
 
-    if (!client || (!buf && len > 0)) {
+    if (!c1 || (!buf && len > 0)) {
         return ESP_ERR_INVALID_ARG;
     }
 
     while (offset < len) {
-        int written = esp_http_client_write(client, buf + offset, (int)(len - offset));
+        int written = esp_http_client_write(c1, buf + offset, (int)(len - offset));
 
         if (written <= 0) {
             return ESP_FAIL;
@@ -537,11 +537,11 @@ static esp_err_t cap_im_feishu_http_client_write_all(esp_http_client_handle_t cl
     return ESP_OK;
 }
 
-static esp_err_t cap_im_feishu_stream_file_to_http_client(esp_http_client_handle_t client, FILE *file)
+static esp_err_t cap_im_feishu_stream_file_to_http_client(esp_http_client_handle_t c1, FILE *file)
 {
     char buf[2048];
 
-    if (!client || !file) {
+    if (!c1 || !file) {
         return ESP_ERR_INVALID_ARG;
     }
 
@@ -554,7 +554,7 @@ static esp_err_t cap_im_feishu_stream_file_to_http_client(esp_http_client_handle
             }
             break;
         }
-        if (cap_im_feishu_http_client_write_all(client, buf, read_len) != ESP_OK) {
+        if (cap_im_feishu_http_client_write_all(c1, buf, read_len) != ESP_OK) {
             return ESP_FAIL;
         }
     }
@@ -1230,7 +1230,7 @@ static esp_err_t cap_im_feishu_download_attachment(const char *message_id,
                                                    size_t *out_bytes)
 {
     esp_http_client_config_t config = {0};
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     char auth_header[CAP_IM_FEISHU_TOKEN_LEN + 16];
     char url[CAP_IM_FEISHU_URL_LEN];
     FILE *file = NULL;
@@ -1274,16 +1274,16 @@ static esp_err_t cap_im_feishu_download_attachment(const char *message_id,
     config.buffer_size_tx = 1024;
     config.crt_bundle_attach = esp_crt_bundle_attach;
 
-    client = esp_http_client_init(&config);
-    if (!client) {
-        ESP_LOGE(TAG, "Feishu attachment HTTP client init failed message=%s", message_id);
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
+        ESP_LOGE(TAG, "Feishu attachment HTTP c1 init failed message=%s", message_id);
         return ESP_FAIL;
     }
 
-    esp_http_client_set_method(client, HTTP_METHOD_GET);
-    esp_http_client_set_header(client, "Authorization", auth_header);
+    esp_http_client_set_method(c1, HTTP_METHOD_GET);
+    esp_http_client_set_header(c1, "Authorization", auth_header);
 
-    err = esp_http_client_open(client, 0);
+    err = esp_http_client_open(c1, 0);
     if (err != ESP_OK) {
         ESP_LOGW(TAG,
                  "Feishu attachment open failed message=%s kind=%s err=%s url=%s",
@@ -1291,15 +1291,15 @@ static esp_err_t cap_im_feishu_download_attachment(const char *message_id,
                  resource_type,
                  esp_err_to_name(err),
                  url);
-        esp_http_client_cleanup(client);
+        esp_http_client_cleanup(c1);
         return err;
     }
 
-    content_length = esp_http_client_fetch_headers(client);
-    status = esp_http_client_get_status_code(client);
+    content_length = esp_http_client_fetch_headers(c1);
+    status = esp_http_client_get_status_code(c1);
     if (status < 200 || status >= 300) {
         char error_buf[192] = {0};
-        int error_len = esp_http_client_read(client, error_buf, sizeof(error_buf) - 1);
+        int error_len = esp_http_client_read(c1, error_buf, sizeof(error_buf) - 1);
 
         if (error_len > 0) {
             error_buf[error_len] = '\0';
@@ -1312,8 +1312,8 @@ static esp_err_t cap_im_feishu_download_attachment(const char *message_id,
                  resource_type,
                  status,
                  error_buf[0] ? error_buf : "(empty)");
-        esp_http_client_close(client);
-        esp_http_client_cleanup(client);
+        esp_http_client_close(c1);
+        esp_http_client_cleanup(c1);
         return ESP_FAIL;
     }
     if (content_length > 0 &&
@@ -1326,8 +1326,8 @@ static esp_err_t cap_im_feishu_download_attachment(const char *message_id,
                  content_length,
                  (unsigned)(s_feishu.max_inbound_file_bytes ? s_feishu.max_inbound_file_bytes :
                             (2 * 1024 * 1024)));
-        esp_http_client_close(client);
-        esp_http_client_cleanup(client);
+        esp_http_client_close(c1);
+        esp_http_client_cleanup(c1);
         return ESP_ERR_INVALID_SIZE;
     }
 
@@ -1338,21 +1338,21 @@ static esp_err_t cap_im_feishu_download_attachment(const char *message_id,
                  message_id,
                  saved_path,
                  esp_err_to_name(err));
-        esp_http_client_close(client);
-        esp_http_client_cleanup(client);
+        esp_http_client_close(c1);
+        esp_http_client_cleanup(c1);
         return err;
     }
 
     file = fopen(saved_path, "wb");
     if (!file) {
         ESP_LOGW(TAG, "Feishu attachment open file failed path=%s errno=%d", saved_path, errno);
-        esp_http_client_close(client);
-        esp_http_client_cleanup(client);
+        esp_http_client_close(c1);
+        esp_http_client_cleanup(c1);
         return ESP_FAIL;
     }
 
     while (1) {
-        int read_len = esp_http_client_read(client, read_buf, sizeof(read_buf));
+        int read_len = esp_http_client_read(c1, read_buf, sizeof(read_buf));
 
         if (read_len < 0) {
             ESP_LOGW(TAG,
@@ -1392,8 +1392,8 @@ static esp_err_t cap_im_feishu_download_attachment(const char *message_id,
     }
 
     fclose(file);
-    esp_http_client_close(client);
-    esp_http_client_cleanup(client);
+    esp_http_client_close(c1);
+    esp_http_client_cleanup(c1);
     if (err != ESP_OK || total_bytes == 0) {
         ESP_LOGW(TAG,
                  "Feishu attachment download failed final message=%s kind=%s err=%s bytes=%u",
@@ -2608,7 +2608,7 @@ static esp_err_t cap_im_feishu_upload_media(const char *path,
     struct stat st = {0};
     FILE *file = NULL;
     esp_http_client_config_t config = {0};
-    esp_http_client_handle_t client = NULL;
+    esp_http_client_handle_t c1 = NULL;
     cap_im_feishu_resp_t resp = {0};
     const char *file_name = NULL;
     const char *mime = NULL;
@@ -2715,8 +2715,8 @@ static esp_err_t cap_im_feishu_upload_media(const char *path,
     config.buffer_size = 2048;
     config.buffer_size_tx = 2048;
     config.crt_bundle_attach = esp_crt_bundle_attach;
-    client = esp_http_client_init(&config);
-    if (!client) {
+    c1 = esp_http_client_init(&config);
+    if (!c1) {
         fclose(file);
         cap_im_feishu_resp_free(&resp);
         return ESP_FAIL;
@@ -2725,35 +2725,35 @@ static esp_err_t cap_im_feishu_upload_media(const char *path,
     snprintf(content_type,
              sizeof(content_type),
              "multipart/form-data; boundary=" CAP_IM_FEISHU_MULTIPART_BOUNDARY);
-    esp_http_client_set_method(client, HTTP_METHOD_POST);
-    esp_http_client_set_header(client, "Authorization", auth_header);
-    esp_http_client_set_header(client, "Content-Type", content_type);
+    esp_http_client_set_method(c1, HTTP_METHOD_POST);
+    esp_http_client_set_header(c1, "Authorization", auth_header);
+    esp_http_client_set_header(c1, "Content-Type", content_type);
 
-    err = esp_http_client_open(client, (int)content_length);
+    err = esp_http_client_open(c1, (int)content_length);
     if (err == ESP_OK) {
-        err = cap_im_feishu_http_client_write_all(client, preamble1, (size_t)preamble1_len);
+        err = cap_im_feishu_http_client_write_all(c1, preamble1, (size_t)preamble1_len);
     }
     if (err == ESP_OK && preamble2_len > 0) {
-        err = cap_im_feishu_http_client_write_all(client, preamble2, (size_t)preamble2_len);
+        err = cap_im_feishu_http_client_write_all(c1, preamble2, (size_t)preamble2_len);
     }
     if (err == ESP_OK) {
-        err = cap_im_feishu_http_client_write_all(client, part_file, (size_t)part_file_len);
+        err = cap_im_feishu_http_client_write_all(c1, part_file, (size_t)part_file_len);
     }
     if (err == ESP_OK) {
-        err = cap_im_feishu_stream_file_to_http_client(client, file);
+        err = cap_im_feishu_stream_file_to_http_client(c1, file);
     }
     if (err == ESP_OK) {
-        err = cap_im_feishu_http_client_write_all(client, closing, (size_t)closing_len);
+        err = cap_im_feishu_http_client_write_all(c1, closing, (size_t)closing_len);
     }
-    if (err == ESP_OK && esp_http_client_fetch_headers(client) < 0) {
+    if (err == ESP_OK && esp_http_client_fetch_headers(c1) < 0) {
         err = ESP_FAIL;
     }
 
-    status = esp_http_client_get_status_code(client);
+    status = esp_http_client_get_status_code(c1);
     if (err == ESP_OK) {
         while (1) {
             char buf[512];
-            int read_len = esp_http_client_read(client, buf, sizeof(buf));
+            int read_len = esp_http_client_read(c1, buf, sizeof(buf));
 
             if (read_len < 0) {
                 err = ESP_FAIL;
@@ -2769,8 +2769,8 @@ static esp_err_t cap_im_feishu_upload_media(const char *path,
         }
     }
 
-    esp_http_client_close(client);
-    esp_http_client_cleanup(client);
+    esp_http_client_close(c1);
+    esp_http_client_cleanup(c1);
     fclose(file);
 
     if (err != ESP_OK) {
