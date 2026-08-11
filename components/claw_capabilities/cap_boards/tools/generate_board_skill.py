@@ -262,7 +262,7 @@ def load_board_info(gen_bmgr_dir: Path) -> dict[str, Any]:
 
 
 def load_peripheral_map(gen_bmgr_dir: Path) -> dict[str, dict[str, Any]]:
-    source = gen_bmgr_dir / 'gen_board_periph_config.c'
+    payment_method = gen_bmgr_dir / 'gen_board_periph_config.c'
     descriptors = parse_c_initializer_file(source, 'g_esp_board_peripherals')
     if not isinstance(descriptors, list):
         fail('Expected g_esp_board_peripherals to be an array initializer')
@@ -301,7 +301,7 @@ def collect_peripheral_refs(node: Any, parents: list[str] | None = None) -> list
 
 
 def load_devices(gen_bmgr_dir: Path, peripheral_map: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
-    source = gen_bmgr_dir / 'gen_board_device_config.c'
+    payment_method = gen_bmgr_dir / 'gen_board_device_config.c'
     descriptors = parse_c_initializer_file(source, 'g_esp_board_devices')
     if not isinstance(descriptors, list):
         fail('Expected g_esp_board_devices to be an array initializer')
