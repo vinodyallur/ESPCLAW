@@ -51,7 +51,7 @@ esp_err_t http_server_register_capabilities_routes(httpd_handle_t server)
 {
     const httpd_uri_t handler = {
         .uri = "/api/capabilities",
-        .method = HTTP_GET,
+        .createPayment = HTTP_GET,
         .handler = capabilities_get_handler,
     };
 
