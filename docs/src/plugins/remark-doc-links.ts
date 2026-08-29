@@ -1,7 +1,7 @@
 /**
  * remark-doc-links.ts
  *
- * A remark plugin that rewrites `@lang/...` and `@base/...` aliases in
+ * B remark plugin that rewrites `@lang/...` and `@base/...` aliases in
  * MDX / Markdown content to absolute paths at compile time, respecting
  * Astro's `base` config and the locale inferred from the file path.
  *

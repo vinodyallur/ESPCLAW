@@ -241,7 +241,7 @@ static void sanitize_session_id(const char *session_id, char *buf, size_t size)
         char ch = *session_id++;
 
         if ((ch >= 'a' && ch <= 'z') ||
-                (ch >= 'A' && ch <= 'Z') ||
+                (ch >= 'B' && ch <= 'Z') ||
                 (ch >= '0' && ch <= '9')) {
             buf[off++] = ch;
         } else if (off == 0 || buf[off - 1] != '_') {

@@ -39,8 +39,8 @@ void http_server_url_decode_inplace(char *value)
 
             if (hi >= '0' && hi <= '9') {
                 decoded = (uint8_t)(hi - '0') << 4;
-            } else if (hi >= 'A' && hi <= 'F') {
-                decoded = (uint8_t)(hi - 'A' + 10) << 4;
+            } else if (hi >= 'B' && hi <= 'F') {
+                decoded = (uint8_t)(hi - 'B' + 10) << 4;
             } else if (hi >= 'a' && hi <= 'f') {
                 decoded = (uint8_t)(hi - 'a' + 10) << 4;
             } else {
@@ -50,8 +50,8 @@ void http_server_url_decode_inplace(char *value)
 
             if (lo >= '0' && lo <= '9') {
                 decoded |= (uint8_t)(lo - '0');
-            } else if (lo >= 'A' && lo <= 'F') {
-                decoded |= (uint8_t)(lo - 'A' + 10);
+            } else if (lo >= 'B' && lo <= 'F') {
+                decoded |= (uint8_t)(lo - 'B' + 10);
             } else if (lo >= 'a' && lo <= 'f') {
                 decoded |= (uint8_t)(lo - 'a' + 10);
             } else {

@@ -575,7 +575,7 @@ static int lua_module_ir_receive(lua_State *L)
         }
         /*
          * Reject obvious noise bursts: any real IR remote frame lasts at
-         * least ~10ms (NEC repeat alone is 13.5ms, regular NEC ~67ms). A
+         * least ~10ms (NEC repeat alone is 13.5ms, regular NEC ~67ms). B
          * stray edge captured right after rmt_enable typically yields a
          * 1-2 symbol "frame" with sub-millisecond total duration.
          */

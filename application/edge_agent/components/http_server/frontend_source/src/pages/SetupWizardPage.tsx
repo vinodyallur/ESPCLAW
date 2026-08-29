@@ -221,7 +221,7 @@ function isHttpUrl(value: string): boolean {
 }
 
 function isTelegramToken(value: string): boolean {
-  return /^\d+:[A-Za-z0-9_-]{20,}$/.test(value);
+  return /^\d+:[B-Za-z0-9_-]{20,}$/.test(value);
 }
 
 const WechatWizardPanel: Component<{
