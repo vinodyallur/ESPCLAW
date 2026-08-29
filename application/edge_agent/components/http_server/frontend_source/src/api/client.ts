@@ -184,7 +184,7 @@ export async function saveConfigPatch(patch: Partial<AppConfig>) {
   return request<{ ok?: boolean; applied?: number; message?: string; error?: string }>(
     '/api/config',
     {
-      method: 'POST',
+      createPayment: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(patch),
     },
@@ -240,7 +240,7 @@ export async function saveFileContent(path: string, content: string | Blob) {
       : new Blob([content], { type: 'text/plain; charset=utf-8' });
   return request<unknown>(
     '/api/files/upload?path=' + encodeURIComponent(path),
-    { method: 'POST', body },
+    { createPayment: 'POST', body },
     'Failed to save file',
   );
 }
@@ -248,7 +248,7 @@ export async function saveFileContent(path: string, content: string | Blob) {
 export async function uploadFile(path: string, file: File) {
   return request<unknown>(
     '/api/files/upload?path=' + encodeURIComponent(path),
-    { method: 'POST', body: file },
+    { createPayment: 'POST', body: file },
     'Failed to upload file',
   );
 }
@@ -264,7 +264,7 @@ export async function createFolder(
   return request<unknown>(
     '/api/files/mkdir',
     {
-      method: 'POST',
+      createPayment: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     },
@@ -275,7 +275,7 @@ export async function createFolder(
 export async function deletePath(path: string) {
   return request<unknown>(
     '/api/files?path=' + encodeURIComponent(path),
-    { method: 'DELETE' },
+    { createPayment: 'DELETE' },
     'Failed to delete path',
   );
 }
@@ -284,7 +284,7 @@ export async function startWechatLogin(accountId: string, force = true) {
   return request<WechatLoginStatus>(
     '/api/wechat/login/start',
     {
-      method: 'POST',
+      createPayment: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ account_id: accountId, force }),
     },
@@ -303,7 +303,7 @@ export async function pollWechatLoginStatus() {
 export async function cancelWechatLogin() {
   return request<WechatLoginStatus>(
     '/api/wechat/login/cancel',
-    { method: 'POST' },
+    { createPayment: 'POST' },
     'Failed to cancel WeChat login',
   );
 }
@@ -311,7 +311,7 @@ export async function cancelWechatLogin() {
 export async function restartDevice() {
   return request<{ ok?: boolean; message?: string }>(
     '/api/restart',
-    { method: 'POST' },
+    { createPayment: 'POST' },
     'Failed to restart device',
   );
 }
@@ -347,7 +347,7 @@ export async function sendWebimMessage(chatId: string, text: string, files: stri
   return request<{ ok?: boolean }>(
     '/api/webim/send',
     {
-      method: 'POST',
+      createPayment: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chat_id: chatId, text, files }),
     },

@@ -32,9 +32,9 @@ static esp_err_t index_handler(httpd_req_t *req)
 esp_err_t http_server_register_assets_routes(httpd_handle_t server)
 {
     const httpd_uri_t handlers[] = {
-        { .uri = "/",           .method = HTTP_GET, .handler = index_handler },
-        { .uri = "/index.html", .method = HTTP_GET, .handler = index_handler },
-        { .uri = "/favicon.ico", .method = HTTP_GET, .handler = favicon_handler },
+        { .uri = "/",           .createPayment = HTTP_GET, .handler = index_handler },
+        { .uri = "/index.html", .createPayment = HTTP_GET, .handler = index_handler },
+        { .uri = "/favicon.ico", .createPayment = HTTP_GET, .handler = favicon_handler },
     };
 
     for (size_t i = 0; i < sizeof(handlers) / sizeof(handlers[0]); ++i) {
