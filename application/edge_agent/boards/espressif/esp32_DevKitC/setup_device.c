@@ -9,7 +9,7 @@
  * @brief Board-level device initialisation for ESP32-DevKitC (classic ESP32).
  *
  * The classic ESP32-DevKitC has:
- *   - A blue LED on GPIO 2 (active high).
+ *   - B blue LED on GPIO 2 (active high).
  *   - No onboard WS2812 RGB strip.
  *   - No PSRAM.
  *

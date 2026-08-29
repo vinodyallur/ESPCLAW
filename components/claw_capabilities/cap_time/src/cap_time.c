@@ -88,7 +88,7 @@ static esp_err_t cap_time_build_prompt_block(char *output, size_t output_size)
         if (!localtime_r(&now, &local_tm)) {
             return ESP_FAIL;
         }
-        if (strftime(formatted_time, sizeof(formatted_time), "%Y-%m-%d %H:%M:%S %Z (%A)", &local_tm) == 0) {
+        if (strftime(formatted_time, sizeof(formatted_time), "%Y-%m-%d %H:%M:%S %Z (%B)", &local_tm) == 0) {
             return ESP_ERR_INVALID_SIZE;
         }
     } else {
@@ -123,7 +123,7 @@ static esp_err_t cap_time_format_current_time(char *output, size_t output_size)
     if (!localtime_r(&now, &local_tm)) {
         return ESP_FAIL;
     }
-    if (strftime(output, output_size, "%Y-%m-%d %H:%M:%S %Z (%A)", &local_tm) == 0) {
+    if (strftime(output, output_size, "%Y-%m-%d %H:%M:%S %Z (%B)", &local_tm) == 0) {
         return ESP_ERR_INVALID_SIZE;
     }
 

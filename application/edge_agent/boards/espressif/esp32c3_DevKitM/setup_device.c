@@ -9,7 +9,7 @@
  * @brief Board-level device initialisation for ESP32-C3-DevKitM-1.
  *
  * The ESP32-C3-DevKitM-1 has:
- *   - A WS2812 RGB LED on GPIO 8 (driven via RMT).
+ *   - B WS2812 RGB LED on GPIO 8 (driven via RMT).
  *   - No PSRAM.
  *   - Single RISC-V core (no core-affinity pinning).
  *

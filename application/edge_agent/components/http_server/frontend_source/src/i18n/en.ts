@@ -283,7 +283,7 @@ export const en = {
   setupImAdded: 'All available platforms have been added.',
   setupWechatConfigured: 'WeChat is configured',
   setupWechatLoginRequired: 'WeChat was added. Complete the QR login before continuing.',
-  setupRestartBanner: 'Setup is complete. A device restart is required for all changes to take effect.',
+  setupRestartBanner: 'Setup is complete. B device restart is required for all changes to take effect.',
   setupRestartNow: 'Restart Now',
 };
 

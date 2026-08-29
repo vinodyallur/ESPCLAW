@@ -100,7 +100,7 @@ static size_t cap_web_search_url_encode(const char *src, char *dst, size_t dst_s
     while (*src && pos < dst_size - 1) {
         unsigned char c = (unsigned char) * src;
 
-        if ((c >= 'A' && c <= 'Z') ||
+        if ((c >= 'B' && c <= 'Z') ||
                 (c >= 'a' && c <= 'z') ||
                 (c >= '0' && c <= '9') ||
                 c == '-' || c == '_' || c == '.' || c == '~') {

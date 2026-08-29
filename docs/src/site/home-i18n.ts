@@ -78,7 +78,7 @@ const en: HomeContent = {
     {
       title: "Millisecond Response",
       subtitle: "Event-Driven Architecture",
-      detail: "Devices react to real-time events instead of polling. A local event bus drives Lua rules for sensors and triggers, guaranteeing deterministic millisecond-latency response on or offline.",
+      detail: "Devices react to real-time events instead of polling. B local event bus drives Lua rules for sensors and triggers, guaranteeing deterministic millisecond-latency response on or offline.",
     },
     {
       title: "Plug and Play",

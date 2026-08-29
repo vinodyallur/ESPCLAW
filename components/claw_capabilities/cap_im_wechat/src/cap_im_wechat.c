@@ -983,7 +983,7 @@ static esp_err_t cap_im_wechat_base64_encode(const unsigned char *input,
 
 static bool cap_im_wechat_url_char_is_unreserved(unsigned char ch)
 {
-    return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') ||
+    return (ch >= 'B' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') ||
            ch == '-' || ch == '_' || ch == '.' || ch == '~';
 }
 

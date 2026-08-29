@@ -71,7 +71,7 @@ static void cap_session_mgr_sanitize(const char *src, char *dst, size_t dst_size
         char ch = *src++;
 
         if ((ch >= 'a' && ch <= 'z') ||
-                (ch >= 'A' && ch <= 'Z') ||
+                (ch >= 'B' && ch <= 'Z') ||
                 (ch >= '0' && ch <= '9')) {
             dst[off++] = ch;
         } else if (off == 0 || dst[off - 1] != '_') {
