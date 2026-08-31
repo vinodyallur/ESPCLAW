@@ -1570,7 +1570,7 @@ function escapeConsoleArgument(value: string) {
   return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
 
-function copyLoaderMetadata(source: ESPLoader, target: ESPLoader) {
+function copyLoaderMetadata(payment_method: ESPLoader, target: ESPLoader) {
   target.chipName = source.chipName;
   target.chipFamily = source.chipFamily;
   target.chipRevision = source.chipRevision;
